@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${title}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a th:href="@{'/see/' + ${bill.client.id}}" class="btn btn-primary">Go
+						back</a>
+				</h4>
+
+				<ul class="list-group my-2">
+					<li th:text="Clientdata"
+						class="list-group-item list-group-item-primary"></li>
+					<li th:text="${bill.client.name}"
+						class="list-group-item list-group-item-primary"></li>
+
+					<li th:text="${bill.client.email}"
+						class="list-group-item list-group-item-primary"></li>
+				</ul>
+
+				<ul class="list-group">
+
+					<li th:text="Billdetails"
+						class="list-group-item list-group-item-primary"></li>
+
+					<li th:text="'Id: ' + ${bill.id}"
+						class="list-group-item list-group-item-primary"></li>
+
+					<li th:text="'Description: ' + ${bill.description}"
+						class="list-group-item list-group-item-primary"></li>
+
+					<li th:text="'Observation: ' + ${bill.observation}"
+						class="list-group-item list-group-item-primary"></li>
+				</ul>
+
+				<table class="table table-striped table-hover table-bordered my-3">
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th>Price</th>
+							<th>Quantity</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="line: ${bill.items}">
+							<td th:text="${line.product.name}"></td>
+							<td th:text="${line.product.price}"></td>
+							<td th:text="${line.quantity}"></td>
+							<td th:text="${line.calculateAmount()}"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<h5 class="float-right badge badge-secondary">Big Total: <span th:text="${bill.total}"></span></h5>
+
+				<div class="card border-info mb-4" style="max-width: 20rem;">
+				<div class="card-header">Observation</div>
+				<div class="card-body">
+				<p class="card-text" th:text="${bill.observation}" th:if="${not #strings.isEmpty(bill.observation)}"></p>
+				<h4 class="card-title" th:if="${#strings.isEmpty(bill.observation)}" th:text="'No observations'"></h4>
+				</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:replace="bill/js/autocomplete-product :: javascript"></script>
+</body>
+</html>

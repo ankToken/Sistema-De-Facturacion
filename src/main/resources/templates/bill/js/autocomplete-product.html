@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${title}"></div>
+			<div class="card-body"></div>
+
+			<script type="text/javascript" th:fragment="javascript">
+				$(document).ready(function() {
+					$("#look_for_product").autocomplete({
+						source : function(request, response) {
+							$.ajax({
+								url : "/bill/charge-products/" + request.term,
+								dataType : "json",
+								data : {
+									term : request.term
+								},
+								success : function(data) {
+									response($.map(data, function(item) {
+										return {
+											value : item.id,
+											label : item.name,
+											price : item.price,
+										};
+									}));
+								},
+							});
+						},
+						select : function(event, ui) {
+							
+							if(itemsHelper.hasProduct(ui.item.value)){
+								itemsHelper.incrementQuantity(ui.item.value, ui.item.price);
+								return false;
+							}
+							
+							var line = $("#layoutItemBill").html();
+							
+							line = line.replace(/{ID}/g, ui.item.value);
+							line = line.replace(/{NAME}/g, ui.item.label);
+							line = line.replace(/{PRICE}/g, ui.item.price);
+							
+							$("#chargeItemProduct tbody").append(line);
+							
+							itemsHelper.calculateAmmount(ui.item.id, ui.item.price, 1);
+							return false;
+						}
+					});
+					
+					$("form").submit(function(){
+						$("#layoutItemBill").remove();
+						return;
+					});
+				});
+				
+				var itemsHelper = {
+						calculateAmmount: function(id, price, quantity){
+							$("#total_ammount_" + id).html(parseInt(price) * parseInt(quantity));
+							this.calculateBigTotal();
+				},
+				hasProduct: function(id){
+					var result = false;
+					$('input[name="item_id[]"]').each(function(){
+						if(parseInt(id) == parseInt($(this).val())){
+							result = true;
+						}
+					});
+					return result;
+				},
+				incrementQuantity: function(id, price){
+					var quantity = $("#quantity_" + id).val()? parseInt($("#quantity_" + id).val()):0;
+					$("#quantity_" + id).val(++quantity);
+					this.calculateAmmount(id, price, quantity);
+				},
+				deleteRowBill: function(id){
+					$("#row_" + id).remove();
+					this.calculateBigTotal();
+				},
+				calculateBigTotal: function(){
+					var total = 0;
+					
+					$('span[id^="total_ammount_"]').each(function(){
+						total += parseInt($(this).html());
+					});
+					$('#big_total').html(total);
+				}
+				}
+			</script>
+
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

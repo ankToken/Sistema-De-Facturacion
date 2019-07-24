@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${title}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a class="btn btn-primary" th:href="@{'/see/' + ${bill.client.id}}"
+						th:text="'Go Back'"></a>
+				</h4>
+
+				<form th:action="@{/bill/form/}" th:object="${bill}" method="post">
+
+					<input th:value="${bill.client.name}" disabled='disabled'
+						class="form-control" />
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="Description"></label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{description}" class="form-control" th:errorclass="'form-control is-invalid'"/>
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="Obervation"></label>
+						<div class="col-sm-6">
+							<textarea th:field="*{observation}" class="form-control"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" for="look_for_product"
+							th:text="'Look for a product'"></label>
+						<div class="col-sm-6">
+							<input type="text" name="look_for_product" id="look_for_product"
+								class="form-control" />
+						</div>
+					</div>
+
+					<table th:replace="bill/item-layout :: itemsBill"></table>
+
+					<table id="chargeItemProduct"
+						class="table table-sm table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Total</th>
+								<th>Delete</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+					
+					<h5>Total<span class="badge badge-secondary" id="big_total">0</span></h5>
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="Description"></label>
+						<div class="col-sm-6">
+							<input type="submit" th:value="${title}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:replace="bill/js/autocomplete-product :: javascript"></script>
+</body>
+</html>
