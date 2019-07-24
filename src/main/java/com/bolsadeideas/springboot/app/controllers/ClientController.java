@@ -45,7 +45,7 @@ import com.bolsadeideas.springboot.app.models.service.IClientService;
 import com.bolsadeideas.springboot.app.util.paginator.PageRender;
 
 @Controller
-@SessionAttributes("client") //Safer and recommended
+@SessionAttributes("client")
 public class ClientController {
 
 	@Autowired
@@ -65,7 +65,6 @@ public class ClientController {
 				throw new RuntimeException("Cant charge image");
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + resource.getFilename() + "\"").body(resource);
@@ -97,14 +96,6 @@ public class ClientController {
 		model.addAttribute("title", "Client list");
 		model.addAttribute("clients", clients);
 		model.addAttribute("page", pageRender);
-		
-		
-		//Generate Encoder for users...
-		String password = "12345";
-		for(int i = 0; i < 2; i++) {
-			String bcryptPassword = passwordEncoder.encode(password);
-			System.out.println(bcryptPassword);
-		}
 		
 		return "list";
 	}

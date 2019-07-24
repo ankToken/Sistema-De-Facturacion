@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bolsadeideas.springboot.app.auth.handler.LoginSuccessHandler;
 import com.bolsadeideas.springboot.app.models.service.JpaUserDetailsService;
@@ -26,11 +25,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list").permitAll()
-		/*.antMatchers("/see/**").hasAnyRole("USER")
-		.antMatchers("/uploads/**").hasAnyRole("USER")
-		.antMatchers("/form/**").hasAnyRole("ADMIN")
-		.antMatchers("/delete/**").hasAnyRole("ADMIN")
-		.antMatchers("/bill/**").hasAnyRole("ADMIN")*/
 		.anyRequest().authenticated()
 		.and()
 		.formLogin()
@@ -50,8 +44,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	public void configurerGlobal(AuthenticationManagerBuilder builder) throws Exception{
-		PasswordEncoder encoder = passwordEncoder();
-
 		builder.userDetailsService(userDetailsService)
 		.passwordEncoder(passwordEncoder());
 		

@@ -102,7 +102,7 @@ public class BillController {
 	@GetMapping("/see/{id}")
 	public String see(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
 		
-		Bill bill = clientService.fetchByIdWithClientWithItemBillWithProduct(id);//clientService.findBillById(id);
+		Bill bill = clientService.fetchByIdWithClientWithItemBillWithProduct(id);
 		
 		if(bill == null) {
 			flash.addAttribute("error", "It does'nt look good");
