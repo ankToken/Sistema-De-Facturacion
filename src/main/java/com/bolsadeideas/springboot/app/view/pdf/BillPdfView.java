@@ -28,7 +28,7 @@ public class BillPdfView extends AbstractPdfView {
 		
 		PdfPCell cell = new PdfPCell(new Phrase("Client Data"));
 		cell.setBackgroundColor(new Color(184, 218, 255));
-		cell.setPadding(5f);
+		cell.setPadding(10f);
 		
 		PdfPTable tableDataClient = new PdfPTable(1);
 		tableDataClient.addCell(cell);
