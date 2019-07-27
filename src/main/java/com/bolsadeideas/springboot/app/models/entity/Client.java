@@ -21,6 +21,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "clients")
 public class Client implements Serializable {
@@ -51,6 +53,7 @@ public class Client implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Bill> bills;
 	

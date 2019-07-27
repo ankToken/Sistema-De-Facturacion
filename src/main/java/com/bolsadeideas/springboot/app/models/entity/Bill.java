@@ -21,6 +21,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "bills")
 public class Bill implements Serializable {
@@ -46,6 +48,7 @@ public class Bill implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Client client;
 	
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "bill_id")
 	private List<ItemBill> items;
