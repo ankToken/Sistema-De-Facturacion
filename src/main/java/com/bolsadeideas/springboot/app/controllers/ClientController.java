@@ -102,11 +102,6 @@ public class ClientController {
 		return "list";
 	}
 	
-	@GetMapping(value = "/list-rest")
-	public @ResponseBody List<Client> list(){
-		return clientService.findAll();
-	}
-	
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/form")
 	public String create(Map<String, Object> model) {
