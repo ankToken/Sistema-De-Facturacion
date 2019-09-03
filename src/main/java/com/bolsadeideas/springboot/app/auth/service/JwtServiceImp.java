@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 
 import com.bolsadeideas.springboot.app.auth.SimpleGrantedAuthorityMixin;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtServiceImp implements JwtService {
 
+	public static final String SECRET = Base64Utils.encodeToString("password".getBytes());
+	
+	public static final long EXPIRATION_DATE = 2300000L;
+	
+	public static final String TOKEN_PREFIX = "Bearer ";
+	
+	public static final String HEADER_STRING = "Authorization";
+	
 	@Override
 	public String create(Authentication auth) throws JsonProcessingException{
 		
@@ -34,8 +43,8 @@ public class JwtServiceImp implements JwtService {
 		claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
 
 		String token = Jwts.builder().setClaims(claims).setSubject(username)
-				.signWith(SignatureAlgorithm.HS512, "password".getBytes())
-				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 2300000L)).compact();
+				.signWith(SignatureAlgorithm.HS512, SECRET.getBytes())
+				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE)).compact();
 		
 		return token;
 	}
@@ -54,7 +63,7 @@ public class JwtServiceImp implements JwtService {
 	@Override
 	public Claims getClaims(String token) {
 		
-		Claims claims = Jwts.parser().setSigningKey("password".getBytes()).parseClaimsJws(resolve(token))
+		Claims claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(resolve(token))
 				.getBody();
 		return claims;
 	}
@@ -78,8 +87,8 @@ public class JwtServiceImp implements JwtService {
 
 	@Override
 	public String resolve(String token) {
-		if(token != null && token.startsWith("Bearer "))
-			return token.replace("Bearer ", " ");
+		if(token != null && token.startsWith(TOKEN_PREFIX))
+			return token.replace(TOKEN_PREFIX, " ");
 		return null;
 	}
 }
