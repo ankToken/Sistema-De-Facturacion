@@ -1,2 +1,2 @@
-# Sistema-De-Facturacion
-Sistema de facturación Spring-Angular
+# Facturation-System
+Facturation System Spring-Angular
